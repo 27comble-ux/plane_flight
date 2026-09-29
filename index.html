@@ -1,0 +1,184 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>VR Video</title>
+
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <style>
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+    }
+
+    /*
+      The video itself fills the entire browser window.
+    */
+    #tvVideo {
+      position: fixed;
+
+      left: 0;
+      top: 0;
+
+      width: 100vw;
+      height: 100vh;
+
+      object-fit: cover;
+
+      z-index: 9999;
+
+      background: black;
+    }
+
+    /*
+      Hide the A-Frame scene visually.
+      The video is what the viewer sees.
+    */
+    a-scene {
+      position: fixed;
+      left: 0;
+      top: 0;
+
+      width: 100%;
+      height: 100%;
+
+      z-index: 1;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- ============================================== -->
+  <!-- VIDEO                                          -->
+  <!-- ============================================== -->
+
+  <video
+    id="tvVideo"
+    src="https://codehs.com/uploads/67502b4e7beaa7acc619b1a3656b63d4"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="auto">
+  </video>
+
+
+  <!-- ============================================== -->
+  <!-- A-FRAME                                        -->
+  <!-- ============================================== -->
+
+  <a-scene
+    embedded
+    vr-mode-ui="enabled: true">
+
+    <a-camera
+      position="0 0 0">
+    </a-camera>
+
+  </a-scene>
+
+
+  <!-- ============================================== -->
+  <!-- JAVASCRIPT                                     -->
+  <!-- ============================================== -->
+
+  <script>
+
+    const video = document.getElementById("tvVideo");
+
+
+    // Start the video
+    function startVideo() {
+
+      video.muted = true;
+
+      video.play()
+        .then(function() {
+
+          console.log("VIDEO PLAYING");
+
+        })
+        .catch(function(error) {
+
+          console.log("Autoplay blocked.");
+          console.log(error);
+
+        });
+
+    }
+
+
+    // Start immediately
+    startVideo();
+
+
+    // Start once video data is available
+    video.addEventListener(
+      "loadeddata",
+      startVideo
+    );
+
+
+    // If browser blocks autoplay,
+    // clicking starts the video.
+    document.addEventListener(
+      "click",
+      function() {
+
+        if (video.paused) {
+          startVideo();
+        }
+
+      }
+    );
+
+
+    // Keep looping
+    video.addEventListener(
+      "ended",
+      function() {
+
+        video.currentTime = 0;
+
+        startVideo();
+
+      }
+    );
+
+
+    // Debugging
+    video.addEventListener(
+      "error",
+      function() {
+
+        console.log(
+          "VIDEO ERROR:",
+          video.error
+        );
+
+      }
+    );
+
+  </script>
+
+
+</body>
+
+</html>
+```
